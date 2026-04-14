@@ -20,3 +20,4 @@
 - Added a configurable documentation version setting plus a visible last-updated label on public pages.
 - Refined the page metadata strip by removing the duplicate inline version badge and aligning the documentation label with the last-updated timestamp.
 - Tightened the metadata row layout again by switching the documentation label to inline text and forcing baseline alignment.
+- Normalized pasted rich content on the server side so non-code `pre` blocks no longer render as dark panels and real code blocks receive syntax highlighting reliably.

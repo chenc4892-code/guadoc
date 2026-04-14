@@ -1,7 +1,7 @@
 const fs = require("fs");
 const Database = require("better-sqlite3");
 const config = require("../lib/config");
-const { cleanHtml, excerptFromHtml, plainTextFromHtml, slugFromValue, withHeadingAnchors } = require("../lib/content");
+const { excerptFromHtml, plainTextFromHtml, renderContentHtml, slugFromValue } = require("../lib/content");
 const { hashPassword } = require("../lib/auth");
 
 const ensureDirectory = (directoryPath) => {
@@ -199,7 +199,7 @@ const createNode = (input) => {
     input.slug || title,
     kind === "group" ? "group" : "page",
   );
-  const html = kind === "page" ? withHeadingAnchors(cleanHtml(input.content_html || "")) : "";
+  const html = kind === "page" ? renderContentHtml(input.content_html || "") : "";
   const excerpt = input.excerpt?.trim() || excerptFromHtml(html);
 
   const result = insertNodeStatement.run(
@@ -229,7 +229,7 @@ const updateNode = (id, input) => {
     return null;
   }
 
-  const html = existingNode.kind === "page" ? withHeadingAnchors(cleanHtml(input.content_html || "")) : "";
+  const html = existingNode.kind === "page" ? renderContentHtml(input.content_html || "") : "";
   const slug = resolveUniqueSlug(
     input.parent_id || null,
     input.slug || input.title,

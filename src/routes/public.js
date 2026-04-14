@@ -1,5 +1,5 @@
 const express = require("express");
-const { buildToc } = require("../lib/content");
+const { buildToc, renderContentHtml } = require("../lib/content");
 const { decorateNodes, filterVisibleTree, findPageByPath, previousNextForPage } = require("../lib/tree");
 
 const buildSearchQuery = (query = "") => {
@@ -187,11 +187,15 @@ const publicRouter = ({ dbApi }) => {
       return;
     }
 
-    const toc = buildToc(page.content_html);
+    const renderedContentHtml = renderContentHtml(page.content_html);
+    const toc = buildToc(renderedContentHtml);
     const pagination = previousNextForPage(site.pages, page.id);
 
     res.render("page", {
-      page,
+      page: {
+        ...page,
+        content_html: renderedContentHtml,
+      },
       pageTitle: page.meta_title || page.title,
       pagination,
       site,

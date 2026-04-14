@@ -1,7 +1,18 @@
 const path = require("path");
+const hljs = require("highlight.js");
 const slugify = require("slugify");
 const sanitizeHtml = require("sanitize-html");
 const { parse } = require("node-html-parser");
+
+const escapeHtml = (value = "") =>
+  value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+
+const stripHtmlToText = (html = "") => parse(html).textContent.replace(/\u00a0/g, " ");
 
 const cleanHtml = (html = "") =>
   sanitizeHtml(html, {
@@ -46,10 +57,7 @@ const cleanHtml = (html = "") =>
     allowedSchemes: ["http", "https", "mailto", "data"],
     allowedStyles: {
       "*": {
-        color: [/^.*$/],
-        "background-color": [/^.*$/],
         "text-align": [/^(left|right|center|justify)$/],
-        "font-size": [/^.*$/],
         width: [/^.*$/],
       },
     },
@@ -64,6 +72,99 @@ const cleanHtml = (html = "") =>
       }),
     },
   });
+
+const looksLikeCode = (text = "") => {
+  const normalized = text.trim();
+
+  if (!normalized) {
+    return false;
+  }
+
+  if (normalized.includes("```")) {
+    return true;
+  }
+
+  const codeSignals = [
+    /(^|\n)\s{2,}\S/,
+    /(^|\n)[#>*-]\s+\S/,
+    /[{};=<>()]/,
+    /\b(const|let|var|function|class|import|export|SELECT|INSERT|UPDATE|DELETE|curl|docker|npm|git)\b/i,
+    /https?:\/\//i,
+  ];
+
+  return codeSignals.some((pattern) => pattern.test(normalized));
+};
+
+const addHeadingAnchors = (root) => {
+  const headings = root.querySelectorAll("h1, h2, h3, h4");
+
+  headings.forEach((heading, index) => {
+    const baseId = slugFromValue(heading.textContent, `section-${index + 1}`);
+    if (!heading.getAttribute("id")) {
+      heading.setAttribute("id", baseId);
+    }
+  });
+};
+
+const highlightSource = (sourceCode, language = "") => {
+  if (language && hljs.getLanguage(language)) {
+    return hljs.highlight(sourceCode, {
+      language,
+      ignoreIllegals: true,
+    });
+  }
+
+  return hljs.highlightAuto(sourceCode);
+};
+
+const normalizePreBlocksInHtml = (html = "") =>
+  html.replace(/<pre\b[^>]*>([\s\S]*?)<\/pre>/gi, (_match, innerHtml) => {
+    const codeMatch = innerHtml.match(/<code\b([^>]*)>([\s\S]*?)<\/code>/i);
+
+    if (codeMatch) {
+      const attrs = codeMatch[1] || "";
+      const classMatch = attrs.match(/class=(["'])(.*?)\1/i);
+      const existingClasses = classMatch ? classMatch[2].split(/\s+/).filter(Boolean) : [];
+      const languageClass = existingClasses.find((name) => name.startsWith("language-"));
+      const language = languageClass ? languageClass.slice("language-".length) : "";
+      const sourceCode = stripHtmlToText(codeMatch[2]).trimEnd();
+      const highlighted = highlightSource(sourceCode, language);
+      const nextClasses = new Set(existingClasses);
+
+      nextClasses.add("hljs");
+      if (language) {
+        nextClasses.add(`language-${language}`);
+      } else if (highlighted.language) {
+        nextClasses.add(`language-${highlighted.language}`);
+      }
+
+      return `<pre><code class="${escapeHtml(Array.from(nextClasses).join(" "))}">${highlighted.value}</code></pre>`;
+    }
+
+    const text = stripHtmlToText(innerHtml).trim();
+
+    if (!text) {
+      return "";
+    }
+
+    if (looksLikeCode(text)) {
+      const highlighted = highlightSource(text);
+      const languageClass = highlighted.language ? ` language-${highlighted.language}` : "";
+      return `<pre><code class="hljs${languageClass}">${highlighted.value}</code></pre>`;
+    }
+
+    return text
+      .split(/\n{2,}/)
+      .map((chunk) => `<p>${escapeHtml(chunk).replace(/\n/g, "<br>")}</p>`)
+      .join("");
+  });
+
+const renderContentHtml = (html = "") => {
+  const normalizedHtml = normalizePreBlocksInHtml(cleanHtml(html));
+  const root = parse(normalizedHtml);
+  addHeadingAnchors(root);
+  return root.toString();
+};
 
 const slugFromValue = (value, fallback = "item") => {
   const source = (value || "").trim();
@@ -125,20 +226,6 @@ const buildToc = (html = "") => {
   });
 };
 
-const withHeadingAnchors = (html = "") => {
-  const root = parse(html);
-  const headings = root.querySelectorAll("h1, h2, h3, h4");
-
-  headings.forEach((heading, index) => {
-    const baseId = slugFromValue(heading.textContent, `section-${index + 1}`);
-    if (!heading.getAttribute("id")) {
-      heading.setAttribute("id", baseId);
-    }
-  });
-
-  return root.toString();
-};
-
 const relativeUploadPath = (filename) => path.posix.join("/uploads", filename);
 
 module.exports = {
@@ -147,6 +234,6 @@ module.exports = {
   excerptFromHtml,
   plainTextFromHtml,
   relativeUploadPath,
+  renderContentHtml,
   slugFromValue,
-  withHeadingAnchors,
 };
