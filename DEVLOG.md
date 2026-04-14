@@ -24,3 +24,4 @@
 - Fixed the admin drag-sort asset path so the SortableJS handle works in the dashboard again.
 - Improved mobile navigation behavior with dismissible overlay controls and made the public topbar sticky so menu and search remain accessible on long pages.
 - Added public asset cache-busting and a hidden-by-default mobile backdrop so stale CDN/browser CSS cannot shove the main content into the wrong column after a deploy.
+- Softened the sticky public topbar by removing the full-width background band and keeping only the floating controls visible.
