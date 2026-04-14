@@ -27,10 +27,11 @@
           <%- include("partials/public-tree", { nodes: site.tree, currentPath: page.full_path, className: "doc-tree" }) %>
         </nav>
       </aside>
+      <button type="button" class="sidebar-backdrop" id="sidebar-backdrop" aria-label="Close navigation"></button>
 
       <main class="site-main">
         <header class="page-topbar">
-          <button class="nav-toggle" type="button" data-nav-toggle>Menu</button>
+          <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="site-sidebar">Menu</button>
           <form class="search-form" action="/search" method="get">
             <input type="search" name="q" placeholder="Search the docs" />
           </form>
