@@ -181,10 +181,17 @@ img {
 .listing-search input {
   width: 100%;
   border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.72);
   border-radius: 999px;
   padding: 0.95rem 1.2rem;
   font: inherit;
+}
+
+.search-form input {
+  background: transparent;
+}
+
+.listing-search input {
+  background: rgba(255, 255, 255, 0.72);
 }
 
 .doc-article {
