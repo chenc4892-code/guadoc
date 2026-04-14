@@ -26,3 +26,4 @@
 - Added public asset cache-busting and a hidden-by-default mobile backdrop so stale CDN/browser CSS cannot shove the main content into the wrong column after a deploy.
 - Softened the sticky public topbar by removing the full-width background band and keeping only the floating controls visible.
 - Kept the public page topbar shell transparent while preserving the search input fill for readability.
+- Matched the public search field surface to the version and admin pills so sticky content does not show through it.
