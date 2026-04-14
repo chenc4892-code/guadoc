@@ -37,7 +37,7 @@ Open `http://localhost:3210`.
 Default seeded admin credentials:
 
 - Username: `admin`
-- Password: `change-me-now`
+- Password: read from `.env` or `docker-compose.yml`
 
 Change the credentials immediately after the first login from the settings page.
 
@@ -48,6 +48,8 @@ docker compose up -d --build
 ```
 
 The app stores its SQLite database and uploaded images in the named Docker volume `guadoc_data`.
+
+Before the first production deploy, create a local `.env` file from `.env.example` and set your real domain and admin password there. Do not commit the real password to Git.
 
 ## Environment Variables
 
@@ -107,7 +109,7 @@ location / {
 }
 ```
 
-Set `APP_ORIGIN` to the final external HTTPS URL in production.
+Set `APP_ORIGIN` to the final external HTTPS URL in production and keep the real admin password in `.env`, not in a committed file.
 
 ## Notes
 

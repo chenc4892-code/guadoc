@@ -13,3 +13,4 @@
 - Added focused automated tests for content and navigation utilities plus manual HTTP smoke verification.
 - Changed the default service port from `3000` to `3210` to avoid a local port conflict.
 - Added the TinyMCE GPL license configuration required for self-hosted editor initialization.
+- Switched Docker Compose deployment settings to environment-variable driven configuration so the real admin password can stay out of Git.
