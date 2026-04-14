@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%= pageTitle %> | <%= site.settings.site_title %></title>
     <meta name="description" content="<%= page.meta_description || site.settings.site_description %>" />
-    <link rel="stylesheet" href="/css/public.css" />
-    <link rel="stylesheet" href="/vendor/highlightjs/styles/github.min.css" />
+    <link rel="stylesheet" href="/css/public.css?v=<%= assetVersion %>" />
+    <link rel="stylesheet" href="/vendor/highlightjs/styles/github.min.css?v=<%= assetVersion %>" />
     <% if (site.settings.custom_css) { %>
       <style><%- site.settings.custom_css %></style>
     <% } %>
@@ -27,7 +27,7 @@
           <%- include("partials/public-tree", { nodes: site.tree, currentPath: page.full_path, className: "doc-tree" }) %>
         </nav>
       </aside>
-      <button type="button" class="sidebar-backdrop" id="sidebar-backdrop" aria-label="Close navigation"></button>
+      <button type="button" class="sidebar-backdrop" id="sidebar-backdrop" aria-label="Close navigation" hidden></button>
 
       <main class="site-main">
         <header class="page-topbar">
@@ -94,6 +94,6 @@
       </aside>
     </div>
 
-    <script src="/js/public.js"></script>
+    <script src="/js/public.js?v=<%= assetVersion %>"></script>
   </body>
 </html>

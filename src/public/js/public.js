@@ -6,6 +6,9 @@ if (sidebar && toggle) {
   const setSidebarOpen = (isOpen) => {
     sidebar.classList.toggle("is-open", isOpen);
     document.body.classList.toggle("is-nav-open", isOpen);
+    if (backdrop) {
+      backdrop.hidden = !isOpen;
+    }
     toggle.setAttribute("aria-expanded", String(isOpen));
   };
 

@@ -23,3 +23,4 @@
 - Normalized pasted rich content on the server side so non-code `pre` blocks no longer render as dark panels and real code blocks receive syntax highlighting reliably.
 - Fixed the admin drag-sort asset path so the SortableJS handle works in the dashboard again.
 - Improved mobile navigation behavior with dismissible overlay controls and made the public topbar sticky so menu and search remain accessible on long pages.
+- Added public asset cache-busting and a hidden-by-default mobile backdrop so stale CDN/browser CSS cannot shove the main content into the wrong column after a deploy.
