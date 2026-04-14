@@ -186,9 +186,16 @@ img {
 .doc-article__meta {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: baseline;
   gap: 0.9rem;
   margin-bottom: 0.35rem;
+}
+
+.doc-article__eyebrow {
+  margin: 0;
+  line-height: 1;
+  display: inline-flex;
+  align-items: baseline;
 }
 
 .doc-article__header h1 {
@@ -208,7 +215,7 @@ img {
   font-size: 0.9rem;
   line-height: 1;
   display: inline-flex;
-  align-items: center;
+  align-items: baseline;
 }
 
 .version-pill {
