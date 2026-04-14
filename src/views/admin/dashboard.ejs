@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard | <%= settings.site_title %></title>
+    <link rel="stylesheet" href="/css/admin.css" />
+  </head>
+  <body class="admin-body">
+    <header class="admin-topbar">
+      <div>
+        <p class="admin-topbar__eyebrow">Documentation Admin</p>
+        <h1><%= settings.site_title %></h1>
+      </div>
+      <div class="admin-topbar__actions">
+        <a href="/" class="button button--ghost" target="_blank" rel="noopener noreferrer">Open docs</a>
+        <a href="/admin/settings" class="button button--ghost">Settings</a>
+        <form action="/admin/logout" method="post" class="inline-form">
+          <button type="submit" class="button button--ghost">Sign out</button>
+        </form>
+      </div>
+    </header>
+
+    <main class="admin-layout">
+      <section class="admin-panel admin-panel--hero">
+        <div>
+          <p class="admin-panel__eyebrow">Fast publishing</p>
+          <h2>Paste, preview, publish</h2>
+          <p>Create a new tutorial in the browser and it will appear in the public navigation immediately.</p>
+        </div>
+        <div class="admin-panel__actions">
+          <a href="/admin/nodes/new?kind=page" class="button">New page</a>
+          <a href="/admin/nodes/new?kind=group" class="button button--ghost">New group</a>
+        </div>
+      </section>
+
+      <section class="admin-panel">
+        <div class="admin-section-head">
+          <div>
+            <p class="admin-panel__eyebrow">Navigation</p>
+            <h2>Drag to reorder</h2>
+          </div>
+          <p class="admin-hint">Move groups and pages into the structure you want. Changes save automatically after each drop.</p>
+        </div>
+
+        <div id="tree-root" class="tree-root">
+          <%- include("../partials/admin-tree", { nodes: tree, parentId: null }) %>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="/js/admin-dashboard.js"></script>
+  </body>
+</html>

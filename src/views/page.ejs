@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= pageTitle %> | <%= site.settings.site_title %></title>
+    <meta name="description" content="<%= page.meta_description || site.settings.site_description %>" />
+    <link rel="stylesheet" href="/css/public.css" />
+    <link rel="stylesheet" href="/vendor/highlightjs/styles/github.min.css" />
+    <% if (site.settings.custom_css) { %>
+      <style><%- site.settings.custom_css %></style>
+    <% } %>
+  </head>
+  <body>
+    <div class="site-shell">
+      <aside class="site-sidebar" id="site-sidebar">
+        <a href="/" class="site-brand">
+          <span class="site-brand__eyebrow">Guadoc</span>
+          <strong><%= site.settings.site_title %></strong>
+          <span><%= site.settings.site_tagline %></span>
+        </a>
+        <nav class="site-nav" aria-label="Documentation">
+          <%- include("partials/public-tree", { nodes: site.tree, currentPath: page.full_path, className: "doc-tree" }) %>
+        </nav>
+      </aside>
+
+      <main class="site-main">
+        <header class="page-topbar">
+          <button class="nav-toggle" type="button" data-nav-toggle>Menu</button>
+          <form class="search-form" action="/search" method="get">
+            <input type="search" name="q" placeholder="Search the docs" />
+          </form>
+          <% if (currentAdmin) { %>
+            <a href="/admin" class="button button--ghost">Admin</a>
+          <% } %>
+        </header>
+
+        <article class="doc-article content-body">
+          <header class="doc-article__header">
+            <p class="doc-article__eyebrow">Documentation</p>
+            <h1><%= page.title %></h1>
+            <% if (page.excerpt) { %>
+              <p class="doc-article__excerpt"><%= page.excerpt %></p>
+            <% } %>
+          </header>
+
+          <div class="doc-content">
+            <%- page.content_html %>
+          </div>
+        </article>
+
+        <nav class="page-pagination" aria-label="Page pagination">
+          <% if (pagination.previous) { %>
+            <a href="<%= pagination.previous.url %>" class="page-pagination__link">
+              <span>Previous</span>
+              <strong><%= pagination.previous.title %></strong>
+            </a>
+          <% } %>
+          <% if (pagination.next) { %>
+            <a href="<%= pagination.next.url %>" class="page-pagination__link page-pagination__link--next">
+              <span>Next</span>
+              <strong><%= pagination.next.title %></strong>
+            </a>
+          <% } %>
+        </nav>
+      </main>
+
+      <aside class="site-toc">
+        <div class="toc-card">
+          <p class="toc-card__title">On this page</p>
+          <% if (toc.length === 0) { %>
+            <p class="toc-card__empty">No headings found.</p>
+          <% } else { %>
+            <ol class="toc-list">
+              <% toc.forEach((item) => { %>
+                <li class="toc-list__item toc-list__item--level-<%= item.level %>">
+                  <a href="#<%= item.id %>"><%= item.text %></a>
+                </li>
+              <% }) %>
+            </ol>
+          <% } %>
+        </div>
+      </aside>
+    </div>
+
+    <script src="/vendor/highlightjs/highlight.min.js"></script>
+    <script src="/js/public.js"></script>
+  </body>
+</html>

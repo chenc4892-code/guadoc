@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= pageTitle %> | <%= site.settings.site_title %></title>
+    <link rel="stylesheet" href="/css/public.css" />
+  </head>
+  <body>
+    <main class="listing-shell">
+      <section class="listing-hero">
+        <a href="/" class="listing-hero__brand"><%= site.settings.site_title %></a>
+        <h1>No published pages yet</h1>
+        <p>Create your first page in the admin area and it will appear here automatically.</p>
+        <% if (currentAdmin) { %>
+          <a href="/admin" class="button">Open admin</a>
+        <% } else { %>
+          <a href="/admin/login" class="button">Admin sign in</a>
+        <% } %>
+      </section>
+    </main>
+  </body>
+</html>

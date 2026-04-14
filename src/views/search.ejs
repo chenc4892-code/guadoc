@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= pageTitle %> | <%= site.settings.site_title %></title>
+    <meta name="description" content="<%= site.settings.site_description %>" />
+    <link rel="stylesheet" href="/css/public.css" />
+    <% if (site.settings.custom_css) { %>
+      <style><%- site.settings.custom_css %></style>
+    <% } %>
+  </head>
+  <body>
+    <div class="listing-shell">
+      <header class="listing-hero">
+        <a href="/" class="listing-hero__brand"><%= site.settings.site_title %></a>
+        <h1>Search</h1>
+        <p><%= site.settings.site_tagline %></p>
+        <form class="listing-search" action="/search" method="get">
+          <input type="search" name="q" value="<%= query %>" placeholder="Search guides, API pages, and tutorials" />
+          <button type="submit" class="button">Search</button>
+        </form>
+      </header>
+
+      <main class="listing-main">
+        <% if (!query) { %>
+          <section class="listing-card">
+            <h2>Start with a keyword</h2>
+            <p>Search works across all published pages and returns the most relevant content first.</p>
+          </section>
+        <% } else if (results.length === 0) { %>
+          <section class="listing-card">
+            <h2>No results</h2>
+            <p>No published page matched “<%= query %>”. Try a broader term.</p>
+          </section>
+        <% } else { %>
+          <section class="listing-card">
+            <h2><%= results.length %> result(s)</h2>
+            <div class="search-results">
+              <% results.forEach((result) => { %>
+                <article class="search-result">
+                  <a href="<%= result.url %>" class="search-result__title"><%= result.title %></a>
+                  <p class="search-result__snippet"><%- result.snippet %></p>
+                </article>
+              <% }) %>
+            </div>
+          </section>
+        <% } %>
+      </main>
+    </div>
+  </body>
+</html>

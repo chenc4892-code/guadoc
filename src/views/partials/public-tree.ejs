@@ -1,0 +1,17 @@
+<ul class="<%= className || 'doc-tree' %>">
+  <% nodes.forEach((node) => { %>
+    <% const isMatch = currentPath === node.full_path || currentPath.startsWith(`${node.full_path}/`); %>
+    <li class="doc-tree__item doc-tree__item--<%= node.kind %>">
+      <% if (node.kind === "group") { %>
+        <details class="doc-group" <%= isMatch || node.depth < 1 ? "open" : "" %>>
+          <summary><%= node.title %></summary>
+          <%- include("public-tree", { nodes: node.children, currentPath, className: "doc-tree doc-tree--nested" }) %>
+        </details>
+      <% } else { %>
+        <a href="<%= node.url %>" class="doc-tree__link <%= currentPath === node.full_path ? 'is-active' : '' %>">
+          <span><%= node.title %></span>
+        </a>
+      <% } %>
+    </li>
+  <% }) %>
+</ul>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Sign In | <%= settings.site_title %></title>
+    <link rel="stylesheet" href="/css/admin.css" />
+  </head>
+  <body class="admin-auth-body">
+    <main class="admin-auth">
+      <section class="admin-auth__card">
+        <p class="admin-auth__eyebrow">Guadoc Admin</p>
+        <h1>Sign in</h1>
+        <p>Use the local administrator account to manage the documentation center.</p>
+        <% if (error) { %>
+          <p class="message message--error"><%= error %></p>
+        <% } %>
+        <form action="/admin/login" method="post" class="stack-form">
+          <label>
+            <span>Username</span>
+            <input type="text" name="username" autocomplete="username" required />
+          </label>
+          <label>
+            <span>Password</span>
+            <input type="password" name="password" autocomplete="current-password" required />
+          </label>
+          <button type="submit" class="button">Sign in</button>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>

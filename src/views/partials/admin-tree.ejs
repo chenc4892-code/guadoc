@@ -1,0 +1,39 @@
+<ol class="tree-list" data-parent-id="<%= parentId || '' %>">
+  <% nodes.forEach((node) => { %>
+    <li class="tree-item" data-node-id="<%= node.id %>" data-kind="<%= node.kind %>">
+      <section class="tree-card">
+        <div class="tree-card__main">
+          <button type="button" class="tree-card__handle" aria-label="Drag to reorder">::</button>
+          <div>
+            <p class="tree-card__title"><%= node.title %></p>
+            <p class="tree-card__meta">
+              <span class="pill"><%= node.kind %></span>
+              <span class="pill <%= node.is_published ? 'pill--live' : '' %>"><%= node.is_published ? "published" : "draft" %></span>
+              <% if (node.url) { %>
+                <span class="tree-card__path"><%= node.full_path %></span>
+              <% } %>
+            </p>
+          </div>
+        </div>
+        <div class="tree-card__actions">
+          <% if (node.kind === "group") { %>
+            <a href="/admin/nodes/new?kind=group&parentId=<%= node.id %>" class="button button--ghost">Add group</a>
+            <a href="/admin/nodes/new?kind=page&parentId=<%= node.id %>" class="button button--ghost">Add page</a>
+          <% } %>
+          <% if (node.url) { %>
+            <a href="<%= node.url %>" class="button button--ghost" target="_blank" rel="noopener noreferrer">View</a>
+          <% } %>
+          <a href="/admin/nodes/<%= node.id %>/edit" class="button button--ghost">Edit</a>
+          <form action="/admin/nodes/<%= node.id %>/delete" method="post" class="inline-form">
+            <button type="submit" class="button button--danger" data-confirm="Delete this item and all nested content?">Delete</button>
+          </form>
+        </div>
+      </section>
+      <% if (node.kind === "group") { %>
+        <div class="tree-children">
+          <%- include("admin-tree", { nodes: node.children, parentId: node.id }) %>
+        </div>
+      <% } %>
+    </li>
+  <% }) %>
+</ol>

@@ -1,0 +1,15 @@
+# Development Log
+
+## 2026-04-14
+
+- Bootstrapped the Guadoc application from an empty repository.
+- Built a Node.js and SQLite documentation platform with server-rendered public and admin interfaces.
+- Added local admin authentication with persistent session tokens.
+- Implemented a browser-based rich text editor with live preview and local image uploads.
+- Implemented automatic navigation, full-text search, page table of contents, and previous or next navigation.
+- Added drag-and-drop ordering for groups and pages in the admin dashboard.
+- Added site settings for branding, custom CSS, and credential rotation.
+- Added Docker Compose deployment files, persistent data storage, and project documentation.
+- Added focused automated tests for content and navigation utilities plus manual HTTP smoke verification.
+- Changed the default service port from `3000` to `3210` to avoid a local port conflict.
+- Added the TinyMCE GPL license configuration required for self-hosted editor initialization.

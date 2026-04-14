@@ -1,0 +1,13 @@
+<% nodes.forEach((node) => { %>
+  <% if (node.kind === "group" && !blockedParentIds.includes(node.id)) { %>
+    <option value="<%= node.id %>" <%= String(selectedParentId || "") === String(node.id) ? "selected" : "" %>>
+      <%= `${"  ".repeat(depth)}${node.title}` %>
+    </option>
+    <%- include("admin-node-options", {
+      nodes: node.children,
+      depth: depth + 1,
+      selectedParentId,
+      blockedParentIds,
+    }) %>
+  <% } %>
+<% }) %>

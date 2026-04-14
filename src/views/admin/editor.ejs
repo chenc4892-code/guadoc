@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= node.id ? "Edit item" : "New item" %> | <%= settings.site_title %></title>
+    <link rel="stylesheet" href="/css/admin.css" />
+    <script src="/vendor/tinymce/tinymce.min.js"></script>
+  </head>
+  <body class="admin-body">
+    <header class="admin-topbar">
+      <div>
+        <p class="admin-topbar__eyebrow">Content Editor</p>
+        <h1><%= node.id ? `Edit ${node.title}` : `New ${node.kind}` %></h1>
+      </div>
+      <div class="admin-topbar__actions">
+        <a href="/admin" class="button button--ghost">Back to dashboard</a>
+      </div>
+    </header>
+
+    <main class="editor-layout">
+      <form action="<%= action %>" method="post" class="editor-form">
+        <input type="hidden" name="kind" value="<%= node.kind %>" />
+        <textarea name="content_html" id="content_html" hidden><%- node.content_html %></textarea>
+
+        <section class="admin-panel">
+          <div class="admin-section-head">
+            <div>
+              <p class="admin-panel__eyebrow">Metadata</p>
+              <h2>Basic information</h2>
+            </div>
+            <span class="pill"><%= node.kind %></span>
+          </div>
+
+          <% if (error) { %>
+            <p class="message message--error"><%= error %></p>
+          <% } %>
+
+          <div class="form-grid">
+            <label>
+              <span>Title</span>
+              <input type="text" name="title" id="title" value="<%= node.title %>" required />
+            </label>
+            <label>
+              <span>Slug</span>
+              <input type="text" name="slug" id="slug" value="<%= node.slug %>" placeholder="Auto generated from title" />
+            </label>
+            <label class="form-grid__full">
+              <span>Parent group</span>
+              <select name="parent_id">
+                <option value="">Root</option>
+                <%- include("../partials/admin-node-options", {
+                  nodes: allNodes,
+                  depth: 0,
+                  selectedParentId: node.parent_id,
+                  blockedParentIds: blockedParentIds || [],
+                }) %>
+              </select>
+            </label>
+            <label class="form-grid__full">
+              <span>Excerpt</span>
+              <textarea name="excerpt" rows="3" placeholder="Optional summary for search and page intro"><%= node.excerpt %></textarea>
+            </label>
+            <label class="form-grid__full">
+              <span>Meta title</span>
+              <input type="text" name="meta_title" value="<%= node.meta_title %>" />
+            </label>
+            <label class="form-grid__full">
+              <span>Meta description</span>
+              <textarea name="meta_description" rows="3"><%= node.meta_description %></textarea>
+            </label>
+            <label class="toggle-row">
+              <input type="checkbox" name="is_published" value="1" <%= node.is_published ? "checked" : "" %> />
+              <span>Published and visible to visitors</span>
+            </label>
+          </div>
+        </section>
+
+        <% if (node.kind === "page") { %>
+          <section class="admin-panel">
+            <div class="admin-section-head">
+              <div>
+                <p class="admin-panel__eyebrow">Content</p>
+                <h2>Rich editor + live preview</h2>
+              </div>
+              <p class="admin-hint">Images upload automatically. Pasted formatting is preserved as much as possible.</p>
+            </div>
+
+            <div class="editor-split">
+              <div class="editor-surface">
+                <textarea id="wysiwyg"><%- node.content_html %></textarea>
+              </div>
+              <div class="editor-preview-wrap">
+                <div class="editor-preview-header">
+                  <span>Live preview</span>
+                </div>
+                <article id="live-preview" class="content-body editor-preview"></article>
+              </div>
+            </div>
+          </section>
+        <% } else { %>
+          <section class="admin-panel">
+            <div class="admin-section-head">
+              <div>
+                <p class="admin-panel__eyebrow">Grouping</p>
+                <h2>Container only</h2>
+              </div>
+            </div>
+            <p class="admin-hint">Groups organize the navigation tree and can hold nested groups or pages.</p>
+          </section>
+        <% } %>
+
+        <div class="editor-actions">
+          <button type="submit" class="button">Save</button>
+          <a href="/admin" class="button button--ghost">Cancel</a>
+        </div>
+      </form>
+    </main>
+
+    <script>
+      window.guadocEditor = {
+        customCss: <%- JSON.stringify(settings.custom_css || "") %>,
+        isPage: <%= node.kind === "page" ? "true" : "false" %>
+      };
+    </script>
+    <script src="/vendor/highlightjs/highlight.min.js"></script>
+    <script src="/js/admin-editor.js"></script>
+  </body>
+</html>

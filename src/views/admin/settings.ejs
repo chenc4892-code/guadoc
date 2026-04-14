@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings | <%= settings.site_title %></title>
+    <link rel="stylesheet" href="/css/admin.css" />
+  </head>
+  <body class="admin-body">
+    <header class="admin-topbar">
+      <div>
+        <p class="admin-topbar__eyebrow">Configuration</p>
+        <h1>Settings</h1>
+      </div>
+      <div class="admin-topbar__actions">
+        <a href="/admin" class="button button--ghost">Back to dashboard</a>
+      </div>
+    </header>
+
+    <main class="settings-layout">
+      <section class="admin-panel">
+        <div class="admin-section-head">
+          <div>
+            <p class="admin-panel__eyebrow">Branding</p>
+            <h2>Site settings</h2>
+          </div>
+        </div>
+
+        <% if (siteSuccess) { %>
+          <p class="message message--success"><%= siteSuccess %></p>
+        <% } %>
+
+        <form action="/admin/settings/site" method="post" class="stack-form">
+          <label>
+            <span>Site title</span>
+            <input type="text" name="site_title" value="<%= settings.site_title %>" required />
+          </label>
+          <label>
+            <span>Site tagline</span>
+            <input type="text" name="site_tagline" value="<%= settings.site_tagline %>" />
+          </label>
+          <label>
+            <span>Site description</span>
+            <textarea name="site_description" rows="4"><%= settings.site_description %></textarea>
+          </label>
+          <label>
+            <span>Custom CSS</span>
+            <textarea name="custom_css" rows="12" class="code-field"><%= settings.custom_css %></textarea>
+          </label>
+          <button type="submit" class="button">Save site settings</button>
+        </form>
+      </section>
+
+      <section class="admin-panel">
+        <div class="admin-section-head">
+          <div>
+            <p class="admin-panel__eyebrow">Authentication</p>
+            <h2>Admin account</h2>
+          </div>
+        </div>
+
+        <% if (adminError) { %>
+          <p class="message message--error"><%= adminError %></p>
+        <% } %>
+        <% if (adminSuccess) { %>
+          <p class="message message--success"><%= adminSuccess %></p>
+        <% } %>
+
+        <form action="/admin/settings/account" method="post" class="stack-form">
+          <label>
+            <span>New username</span>
+            <input type="text" name="username" autocomplete="username" required />
+          </label>
+          <label>
+            <span>Current password</span>
+            <input type="password" name="current_password" autocomplete="current-password" required />
+          </label>
+          <label>
+            <span>New password</span>
+            <input type="password" name="new_password" autocomplete="new-password" required />
+          </label>
+          <button type="submit" class="button">Update credentials</button>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>
