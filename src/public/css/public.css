@@ -158,6 +158,8 @@ img {
   z-index: 12;
   padding: 0.25rem 0 0.7rem;
   margin-bottom: 1rem;
+  background: transparent;
+  box-shadow: none;
 }
 
 .nav-toggle {
@@ -175,6 +177,8 @@ img {
 .search-form {
   flex: 1;
   display: flex;
+  background: transparent;
+  box-shadow: none;
 }
 
 .search-form input,
@@ -187,10 +191,6 @@ img {
 }
 
 .search-form input {
-  background: transparent;
-}
-
-.listing-search input {
   background: rgba(255, 255, 255, 0.72);
 }
 
