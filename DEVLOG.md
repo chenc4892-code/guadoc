@@ -18,3 +18,4 @@
 - Improved page slug generation to support Chinese titles and automatically avoid sibling slug collisions.
 - Rebalanced the public page layout so the documentation content sits more centrally between the sidebar and the table of contents.
 - Added a configurable documentation version setting plus a visible last-updated label on public pages.
+- Refined the page metadata strip by removing the duplicate inline version badge and aligning the documentation label with the last-updated timestamp.
