@@ -302,6 +302,7 @@ const adminRouter = ({ dbApi }) => {
       site_title: String(req.body.site_title || "").trim(),
       site_tagline: String(req.body.site_tagline || "").trim(),
       site_description: String(req.body.site_description || "").trim(),
+      docs_version: String(req.body.docs_version || "").trim(),
       custom_css: String(req.body.custom_css || ""),
     });
 

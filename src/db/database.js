@@ -91,6 +91,7 @@ const defaultSettings = {
   site_title: "Guadoc",
   site_tagline: "Warm, searchable API documentation for your users.",
   site_description: "A self-hosted documentation center for API guides and ecosystem tutorials.",
+  docs_version: "v1.0",
   custom_css: "",
 };
 

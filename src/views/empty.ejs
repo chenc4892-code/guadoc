@@ -10,6 +10,9 @@
     <main class="listing-shell">
       <section class="listing-hero">
         <a href="/" class="listing-hero__brand"><%= site.settings.site_title %></a>
+        <% if (site.settings.docs_version) { %>
+          <span class="version-pill"><%= site.settings.docs_version %></span>
+        <% } %>
         <h1>No published pages yet</h1>
         <p>Create your first page in the admin area and it will appear here automatically.</p>
         <% if (currentAdmin) { %>

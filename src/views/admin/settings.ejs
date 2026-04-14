@@ -44,6 +44,10 @@
             <textarea name="site_description" rows="4"><%= settings.site_description %></textarea>
           </label>
           <label>
+            <span>Docs version</span>
+            <input type="text" name="docs_version" value="<%= settings.docs_version || '' %>" placeholder="v1.0" />
+          </label>
+          <label>
             <span>Custom CSS</span>
             <textarea name="custom_css" rows="12" class="code-field"><%= settings.custom_css %></textarea>
           </label>

@@ -14,6 +14,9 @@
     <div class="listing-shell">
       <header class="listing-hero">
         <a href="/" class="listing-hero__brand"><%= site.settings.site_title %></a>
+        <% if (site.settings.docs_version) { %>
+          <span class="version-pill"><%= site.settings.docs_version %></span>
+        <% } %>
         <h1>Search</h1>
         <p><%= site.settings.site_tagline %></p>
         <form class="listing-search" action="/search" method="get">

@@ -16,3 +16,5 @@
 - Switched Docker Compose deployment settings to environment-variable driven configuration so the real admin password can stay out of Git.
 - Fixed the container metadata to expose port `3210` instead of the old `3000` value.
 - Improved page slug generation to support Chinese titles and automatically avoid sibling slug collisions.
+- Rebalanced the public page layout so the documentation content sits more centrally between the sidebar and the table of contents.
+- Added a configurable documentation version setting plus a visible last-updated label on public pages.

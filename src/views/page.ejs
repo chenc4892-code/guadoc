@@ -12,12 +12,16 @@
     <% } %>
   </head>
   <body>
+    <% const updatedLabel = new Intl.DateTimeFormat("en", { dateStyle: "medium", timeStyle: "short" }).format(new Date(page.updated_at)); %>
     <div class="site-shell">
       <aside class="site-sidebar" id="site-sidebar">
         <a href="/" class="site-brand">
           <span class="site-brand__eyebrow">Guadoc</span>
           <strong><%= site.settings.site_title %></strong>
           <span><%= site.settings.site_tagline %></span>
+          <% if (site.settings.docs_version) { %>
+            <span class="version-pill"><%= site.settings.docs_version %></span>
+          <% } %>
         </a>
         <nav class="site-nav" aria-label="Documentation">
           <%- include("partials/public-tree", { nodes: site.tree, currentPath: page.full_path, className: "doc-tree" }) %>
@@ -30,6 +34,9 @@
           <form class="search-form" action="/search" method="get">
             <input type="search" name="q" placeholder="Search the docs" />
           </form>
+          <% if (site.settings.docs_version) { %>
+            <span class="version-pill version-pill--muted"><%= site.settings.docs_version %></span>
+          <% } %>
           <% if (currentAdmin) { %>
             <a href="/admin" class="button button--ghost">Admin</a>
           <% } %>
@@ -37,7 +44,13 @@
 
         <article class="doc-article content-body">
           <header class="doc-article__header">
-            <p class="doc-article__eyebrow">Documentation</p>
+            <div class="doc-article__meta">
+              <p class="doc-article__eyebrow">Documentation</p>
+              <% if (site.settings.docs_version) { %>
+                <span class="version-pill"><%= site.settings.docs_version %></span>
+              <% } %>
+              <span class="doc-updated">Last updated <%= updatedLabel %></span>
+            </div>
             <h1><%= page.title %></h1>
             <% if (page.excerpt) { %>
               <p class="doc-article__excerpt"><%= page.excerpt %></p>
