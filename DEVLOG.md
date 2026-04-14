@@ -14,3 +14,5 @@
 - Changed the default service port from `3000` to `3210` to avoid a local port conflict.
 - Added the TinyMCE GPL license configuration required for self-hosted editor initialization.
 - Switched Docker Compose deployment settings to environment-variable driven configuration so the real admin password can stay out of Git.
+- Fixed the container metadata to expose port `3210` instead of the old `3000` value.
+- Improved page slug generation to support Chinese titles and automatically avoid sibling slug collisions.

@@ -78,6 +78,14 @@ const getNodeByIdStatement = db.prepare("SELECT * FROM nodes WHERE id = ? LIMIT 
 const getAllNodesStatement = db.prepare("SELECT * FROM nodes ORDER BY sort_order, id");
 const findAdminByUsernameStatement = db.prepare("SELECT * FROM admins WHERE username = ? LIMIT 1");
 const getSingleAdminStatement = db.prepare("SELECT * FROM admins LIMIT 1");
+const siblingSlugExistsStatement = db.prepare(`
+  SELECT 1
+  FROM nodes
+  WHERE parent_id IS ?
+    AND slug = ?
+    AND (? IS NULL OR id != ?)
+  LIMIT 1
+`);
 
 const defaultSettings = {
   site_title: "Guadoc",
@@ -121,6 +129,19 @@ const nextSortOrder = (parentId = null) => {
     .get(parentId);
 
   return row.sort_order + 1;
+};
+
+const resolveUniqueSlug = (parentId, sourceValue, fallback, excludeId = null) => {
+  const baseSlug = slugFromValue(sourceValue, fallback);
+  let candidate = baseSlug;
+  let suffix = 2;
+
+  while (siblingSlugExistsStatement.get(parentId, candidate, excludeId, excludeId)) {
+    candidate = `${baseSlug}-${suffix}`;
+    suffix += 1;
+  }
+
+  return candidate;
 };
 
 const insertNodeStatement = db.prepare(`
@@ -172,7 +193,11 @@ const createNode = (input) => {
   const now = new Date().toISOString();
   const kind = input.kind === "group" ? "group" : "page";
   const title = input.title.trim();
-  const slug = slugFromValue(input.slug || title, kind === "group" ? "group" : "page");
+  const slug = resolveUniqueSlug(
+    input.parent_id || null,
+    input.slug || title,
+    kind === "group" ? "group" : "page",
+  );
   const html = kind === "page" ? withHeadingAnchors(cleanHtml(input.content_html || "")) : "";
   const excerpt = input.excerpt?.trim() || excerptFromHtml(html);
 
@@ -204,11 +229,17 @@ const updateNode = (id, input) => {
   }
 
   const html = existingNode.kind === "page" ? withHeadingAnchors(cleanHtml(input.content_html || "")) : "";
+  const slug = resolveUniqueSlug(
+    input.parent_id || null,
+    input.slug || input.title,
+    existingNode.kind === "group" ? "group" : "page",
+    id,
+  );
 
   updateNodeStatement.run(
     input.parent_id || null,
     input.title.trim(),
-    slugFromValue(input.slug || input.title, existingNode.kind === "group" ? "group" : "page"),
+    slug,
     input.excerpt?.trim() || excerptFromHtml(html),
     html,
     input.meta_title?.trim() || "",

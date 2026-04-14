@@ -67,13 +67,25 @@ const cleanHtml = (html = "") =>
 
 const slugFromValue = (value, fallback = "item") => {
   const source = (value || "").trim();
-  const normalized = slugify(source, {
+  const asciiSlug = slugify(source, {
     lower: true,
     strict: true,
     trim: true,
   });
 
-  return normalized || fallback;
+  if (asciiSlug) {
+    return asciiSlug;
+  }
+
+  const unicodeSlug = source
+    .normalize("NFKC")
+    .toLowerCase()
+    .replace(/[\s/]+/g, "-")
+    .replace(/[^\p{L}\p{N}-]+/gu, "")
+    .replace(/-+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+  return unicodeSlug || fallback;
 };
 
 const plainTextFromHtml = (html = "") => {

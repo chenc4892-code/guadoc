@@ -5,6 +5,7 @@ const { buildToc, plainTextFromHtml, slugFromValue, withHeadingAnchors } = requi
 test("slugFromValue normalizes rich text headings", () => {
   assert.equal(slugFromValue(" Hello API World! "), "hello-api-world");
   assert.equal(slugFromValue("###", "fallback"), "fallback");
+  assert.equal(slugFromValue("接口 文档"), "接口-文档");
 });
 
 test("withHeadingAnchors injects stable ids and TOC entries", () => {
