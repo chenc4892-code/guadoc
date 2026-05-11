@@ -10,9 +10,22 @@ const slugify = (value) =>
 const titleField = document.getElementById("title");
 const slugField = document.getElementById("slug");
 const contentField = document.getElementById("content_html");
+const encodedContentField = document.getElementById("content_html_encoded");
 const preview = document.getElementById("live-preview");
 const editorConfig = window.guadocEditor || {};
 let slugEditedManually = Boolean(slugField?.value);
+
+const encodeBase64Utf8 = (value) => {
+  const bytes = new TextEncoder().encode(value);
+  let binary = "";
+  const chunkSize = 0x8000;
+
+  for (let index = 0; index < bytes.length; index += chunkSize) {
+    binary += String.fromCharCode(...bytes.subarray(index, index + chunkSize));
+  }
+
+  return window.btoa(binary);
+};
 
 if (titleField && slugField) {
   slugField.addEventListener("input", () => {
@@ -54,6 +67,20 @@ const renderPreview = (html) => {
 
 if (contentField && !editorConfig.isPage) {
   contentField.value = "";
+}
+
+const editorForm = document.querySelector(".editor-form");
+
+if (editorForm && contentField && encodedContentField) {
+  editorForm.addEventListener("submit", () => {
+    const activeEditor = window.tinymce?.get("wysiwyg");
+
+    if (activeEditor && editorConfig.isPage) {
+      contentField.value = activeEditor.getContent();
+    }
+
+    encodedContentField.value = encodeBase64Utf8(contentField.value || "");
+  });
 }
 
 if (contentField && editorConfig.isPage && window.tinymce) {

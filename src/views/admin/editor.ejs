@@ -21,7 +21,8 @@
     <main class="editor-layout">
       <form action="<%= action %>" method="post" class="editor-form">
         <input type="hidden" name="kind" value="<%= node.kind %>" />
-        <textarea name="content_html" id="content_html" hidden><%- node.content_html %></textarea>
+        <input type="hidden" name="content_html_encoded" id="content_html_encoded" value="" />
+        <textarea id="content_html" hidden><%- node.content_html %></textarea>
 
         <section class="admin-panel">
           <div class="admin-section-head">

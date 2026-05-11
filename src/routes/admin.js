@@ -57,6 +57,20 @@ const adminRouter = ({ dbApi }) => {
     tree: decorateNodes(dbApi.getAllNodes()).roots,
   });
 
+  const decodeContentHtml = (body) => {
+    const encoded = String(body.content_html_encoded || "");
+
+    if (!encoded) {
+      return String(body.content_html || "");
+    }
+
+    try {
+      return Buffer.from(encoded, "base64").toString("utf8");
+    } catch (_error) {
+      return String(body.content_html || "");
+    }
+  };
+
   router.get("/login", (req, res) => {
     if (req.admin) {
       res.redirect("/admin");
@@ -148,7 +162,7 @@ const adminRouter = ({ dbApi }) => {
     title: String(req.body.title || "").trim(),
     slug: String(req.body.slug || "").trim(),
     excerpt: String(req.body.excerpt || "").trim(),
-    content_html: String(req.body.content_html || ""),
+    content_html: decodeContentHtml(req.body),
     meta_title: String(req.body.meta_title || "").trim(),
     meta_description: String(req.body.meta_description || "").trim(),
     is_published: req.body.is_published === "1",

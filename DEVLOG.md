@@ -1,5 +1,16 @@
 # Development Log
 
+## 2026-05-12
+
+- Encoded rich editor HTML before admin page form submission and decoded it server-side to reduce Cloudflare WAF false positives when API guides contain code-like content.
+
+## 2026-04-16
+
+- Added `BRAND_GUIDE.md` to capture the current Guadoc visual language as a reusable brand reference for future design and vibecoding work.
+- Documented the brand keywords, palette, typography direction, layout DNA, component rules, and a reusable prompt seed based on the current public UI.
+- Refined `BRAND_GUIDE.md` to remove documentation-specific layout assumptions so the guide works as a broader cross-product brand system.
+- Added `brand-prompt.md` as a shorter copy-paste prompt for day-to-day vibecoding use.
+
 ## 2026-04-14
 
 - Bootstrapped the Guadoc application from an empty repository.
