@@ -3,6 +3,7 @@
 ## 2026-05-12
 
 - Encoded rich editor HTML before admin page form submission and decoded it server-side to reduce Cloudflare WAF false positives when API guides contain code-like content.
+- Made admin session cookies follow the current request security state so direct IP HTTP access works for emergency admin bypass while HTTPS proxy traffic still receives secure cookies.
 
 ## 2026-04-16
 

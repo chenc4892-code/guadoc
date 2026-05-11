@@ -36,11 +36,13 @@ const adminRouter = ({ dbApi }) => {
     },
   });
 
-  const setSessionCookie = (res, token, expiresAt) => {
+  const isSecureRequest = (req) => req.secure || req.get("x-forwarded-proto") === "https";
+
+  const setSessionCookie = (req, res, token, expiresAt) => {
     res.cookie(config.cookieName, token, {
       httpOnly: true,
       sameSite: "lax",
-      secure: Boolean(config.appOrigin.startsWith("https://")),
+      secure: isSecureRequest(req),
       expires: new Date(expiresAt),
     });
   };
@@ -97,7 +99,7 @@ const adminRouter = ({ dbApi }) => {
     }
 
     const session = createSession(dbApi.db, admin.id);
-    setSessionCookie(res, session.token, session.expiresAt);
+    setSessionCookie(req, res, session.token, session.expiresAt);
     res.redirect("/admin");
   });
 
