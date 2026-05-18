@@ -132,7 +132,7 @@ const publicRouter = ({ dbApi }) => {
       id: page.id,
       title: page.title,
       excerpt: page.excerpt,
-      content_html: page.content_html,
+      content_html: renderContentHtml(page.content_html),
       path: page.full_path,
       url: page.url,
       updated_at: page.updated_at,

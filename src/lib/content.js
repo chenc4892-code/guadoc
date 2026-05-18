@@ -1,5 +1,6 @@
 const path = require("path");
 const hljs = require("highlight.js");
+const MarkdownIt = require("markdown-it");
 const slugify = require("slugify");
 const sanitizeHtml = require("sanitize-html");
 const { parse } = require("node-html-parser");
@@ -13,6 +14,8 @@ const escapeHtml = (value = "") =>
     .replace(/'/g, "&#39;");
 
 const stripHtmlToText = (html = "") => parse(html).textContent.replace(/\u00a0/g, " ");
+
+const markdownWrapperBlockTags = new Set(["p", "div", "span", "br"]);
 
 const cleanHtml = (html = "") =>
   sanitizeHtml(html, {
@@ -117,6 +120,54 @@ const highlightSource = (sourceCode, language = "") => {
   return hljs.highlightAuto(sourceCode);
 };
 
+const markdown = new MarkdownIt({
+  breaks: false,
+  html: false,
+  linkify: true,
+  typographer: false,
+  highlight: (sourceCode, language) => {
+    const highlighted = highlightSource(sourceCode, language);
+    return highlighted.value;
+  },
+});
+
+const hasOnlyPlainTextWrapperTags = (html = "") => {
+  const tags = Array.from(html.matchAll(/<\/?([a-z][\w-]*)\b[^>]*>/gi), (match) => match[1].toLowerCase());
+
+  return tags.every((tag) => markdownWrapperBlockTags.has(tag));
+};
+
+const markdownSourceFromHtml = (html = "") =>
+  html
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<\/(p|div)>/gi, "\n\n")
+    .replace(/<(p|div)\b[^>]*>/gi, "")
+    .replace(/\u00a0/g, " ");
+
+const looksLikeMarkdown = (source = "") => {
+  const normalized = source.trim();
+
+  if (!normalized) {
+    return false;
+  }
+
+  const lineMatches = (pattern) => (normalized.match(pattern) || []).length;
+
+  return (
+    /(^|\n)```[\s\S]*?```/m.test(normalized) ||
+    /(^|\n)#{1,6}\s+\S/.test(normalized) ||
+    /(^|\n)\|.+\|\s*\n\|[\s:-]+\|/.test(normalized) ||
+    lineMatches(/(^|\n)\s*[-*+]\s+\S/g) >= 2 ||
+    lineMatches(/(^|\n)\s*\d+\.\s+\S/g) >= 2 ||
+    /(^|\n)>\s+\S/.test(normalized) ||
+    /!\[[^\]]*]\([^)]+\)/.test(normalized) ||
+    /\[[^\]]+]\([^)]+\)/.test(normalized)
+  );
+};
+
+const shouldRenderMarkdown = (html = "", source = "") =>
+  hasOnlyPlainTextWrapperTags(html) && looksLikeMarkdown(source);
+
 const normalizePreBlocksInHtml = (html = "") =>
   html.replace(/<pre\b[^>]*>([\s\S]*?)<\/pre>/gi, (_match, innerHtml) => {
     const codeMatch = innerHtml.match(/<code\b([^>]*)>([\s\S]*?)<\/code>/i);
@@ -159,11 +210,22 @@ const normalizePreBlocksInHtml = (html = "") =>
       .join("");
   });
 
-const renderContentHtml = (html = "") => {
+const finalizeContentHtml = (html = "") => {
   const normalizedHtml = normalizePreBlocksInHtml(cleanHtml(html));
   const root = parse(normalizedHtml);
   addHeadingAnchors(root);
   return root.toString();
+};
+
+const renderContentHtml = (html = "") => {
+  const cleanedHtml = cleanHtml(html);
+  const markdownSource = stripHtmlToText(markdownSourceFromHtml(cleanedHtml));
+
+  if (shouldRenderMarkdown(cleanedHtml, markdownSource)) {
+    return finalizeContentHtml(markdown.render(markdownSource));
+  }
+
+  return finalizeContentHtml(cleanedHtml);
 };
 
 const slugFromValue = (value, fallback = "item") => {

@@ -3,7 +3,7 @@ const express = require("express");
 const multer = require("multer");
 const { createSession, destroySession, hashPassword, rotateAdminSessions, verifyPassword } = require("../lib/auth");
 const config = require("../lib/config");
-const { relativeUploadPath, slugFromValue } = require("../lib/content");
+const { relativeUploadPath, renderContentHtml, slugFromValue } = require("../lib/content");
 const { collectDescendantIds, decorateNodes } = require("../lib/tree");
 const { requireAdmin } = require("../middleware/admin");
 
@@ -291,6 +291,12 @@ const adminRouter = ({ dbApi }) => {
     const tree = Array.isArray(req.body.tree) ? req.body.tree : [];
     dbApi.reorderNodes(tree);
     res.json({ ok: true });
+  });
+
+  router.post("/preview/content", requireAdmin, (req, res) => {
+    res.json({
+      content_html: renderContentHtml(decodeContentHtml(req.body)),
+    });
   });
 
   router.post("/uploads/image", requireAdmin, upload.single("file"), (req, res) => {

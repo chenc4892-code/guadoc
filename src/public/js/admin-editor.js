@@ -14,6 +14,8 @@ const encodedContentField = document.getElementById("content_html_encoded");
 const preview = document.getElementById("live-preview");
 const editorConfig = window.guadocEditor || {};
 let slugEditedManually = Boolean(slugField?.value);
+let previewTimer = null;
+let previewRequestId = 0;
 
 const encodeBase64Utf8 = (value) => {
   const bytes = new TextEncoder().encode(value);
@@ -39,7 +41,7 @@ if (titleField && slugField) {
   });
 }
 
-const renderPreview = (html) => {
+const paintPreview = (html) => {
   if (!preview) {
     return;
   }
@@ -63,6 +65,43 @@ const renderPreview = (html) => {
       window.hljs.highlightElement(block);
     }
   });
+};
+
+const renderPreview = (html) => {
+  if (!preview) {
+    return;
+  }
+
+  const requestId = (previewRequestId += 1);
+  window.clearTimeout(previewTimer);
+
+  previewTimer = window.setTimeout(async () => {
+    try {
+      const response = await window.fetch("/admin/preview/content", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          content_html_encoded: encodeBase64Utf8(html),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Preview request failed.");
+      }
+
+      const data = await response.json();
+
+      if (requestId === previewRequestId) {
+        paintPreview(data.content_html || html);
+      }
+    } catch (_error) {
+      if (requestId === previewRequestId) {
+        paintPreview(html);
+      }
+    }
+  }, 180);
 };
 
 if (contentField && !editorConfig.isPage) {

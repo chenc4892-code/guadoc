@@ -1,5 +1,11 @@
 # Development Log
 
+## 2026-05-18
+
+- Added server-side Markdown detection and rendering for plain Markdown pasted into the rich editor.
+- Routed the admin live preview through the same server-side renderer so Markdown preview matches published pages.
+- Returned rendered page HTML from the public single-page API endpoint.
+
 ## 2026-05-12
 
 - Encoded rich editor HTML before admin page form submission and decoded it server-side to reduce Cloudflare WAF false positives when API guides contain code-like content.

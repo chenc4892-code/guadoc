@@ -23,6 +23,35 @@ test("withHeadingAnchors injects stable ids and TOC entries", () => {
   );
 });
 
+test("renderContentHtml renders pasted markdown source", () => {
+  const html = renderContentHtml(`# Markdown Guide
+
+## Setup
+
+- Install
+- Configure
+
+\`\`\`js
+const answer = 42;
+\`\`\``);
+
+  assert.match(html, /<h1 id="markdown-guide">Markdown Guide<\/h1>/);
+  assert.match(html, /<h2 id="setup">Setup<\/h2>/);
+  assert.match(html, /<li>Install<\/li>/);
+  assert.match(html, /class="language-js hljs"|class="hljs language-js"/);
+});
+
+test("renderContentHtml renders TinyMCE paragraph-wrapped markdown", () => {
+  const html = renderContentHtml(
+    "<p><span># API Guide</span></p><p>## Prompt Caching</p><p>1. cache_control</p><p>2. metadata</p>",
+  );
+
+  assert.match(html, /<h1 id="api-guide">API Guide<\/h1>/);
+  assert.match(html, /<h2 id="prompt-caching">Prompt Caching<\/h2>/);
+  assert.match(html, /<ol>/);
+  assert.match(html, /<li>\s*(?:<p>)?cache_control/);
+});
+
 test("plainTextFromHtml strips tags for indexing", () => {
   assert.equal(plainTextFromHtml("<p>Hello <strong>world</strong></p>"), "Hello world");
 });
