@@ -260,8 +260,8 @@ img {
 }
 
 .content-body {
-  line-height: 1.8;
-  font-size: 1.04rem;
+  line-height: 1.86;
+  font-size: 1.12rem;
 }
 
 .content-body h1,
@@ -300,16 +300,99 @@ img {
 }
 
 .content-body pre {
-  overflow: auto;
-  padding: 1rem 1.1rem;
-  border-radius: var(--radius-md);
-  background: #211c1d;
+  position: relative;
+  overflow: hidden;
+  padding: 2.75rem 0 0;
+  border: 1px solid rgba(255, 248, 241, 0.12);
+  border-radius: 16px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 2.7rem),
+    #171312;
   color: #f7f1eb;
+  box-shadow: 0 22px 42px rgba(32, 22, 20, 0.18);
+}
+
+.content-body pre::before {
+  content: "";
+  position: absolute;
+  top: 1rem;
+  left: 1.1rem;
+  width: 0.72rem;
+  height: 0.72rem;
+  border-radius: 50%;
+  background: #e46c64;
+  box-shadow:
+    1.05rem 0 0 #e1b95f,
+    2.1rem 0 0 #79b16f;
 }
 
 .content-body code {
   font-family: "SFMono-Regular", Consolas, monospace;
   font-size: 0.92em;
+}
+
+.content-body pre code,
+.content-body pre code.hljs {
+  display: block;
+  overflow: auto;
+  min-width: 100%;
+  max-height: 720px;
+  padding: 1.2rem 1.35rem;
+  background: transparent !important;
+  color: #f7f1eb;
+  line-height: 1.75;
+  white-space: pre;
+}
+
+.content-body pre .hljs-keyword,
+.content-body pre .hljs-selector-tag {
+  color: #ffb4a9;
+}
+
+.content-body pre .hljs-string,
+.content-body pre .hljs-title,
+.content-body pre .hljs-section,
+.content-body pre .hljs-attribute {
+  color: #f1d58a;
+}
+
+.content-body pre .hljs-number,
+.content-body pre .hljs-literal,
+.content-body pre .hljs-built_in,
+.content-body pre .hljs-type {
+  color: #c7b1f0;
+}
+
+.content-body pre .hljs-attr,
+.content-body pre .hljs-variable,
+.content-body pre .hljs-template-variable {
+  color: #9ad0ec;
+}
+
+.content-body pre .hljs-comment,
+.content-body pre .hljs-quote {
+  color: #98b785;
+  font-style: italic;
+}
+
+.code-copy-button {
+  position: absolute;
+  top: 0.62rem;
+  right: 0.72rem;
+  z-index: 1;
+  border: 1px solid rgba(255, 248, 241, 0.18);
+  border-radius: 999px;
+  padding: 0.38rem 0.7rem;
+  background: rgba(255, 248, 241, 0.08);
+  color: #f7f1eb;
+  font: 700 0.78rem "Segoe UI", Arial, sans-serif;
+  cursor: pointer;
+}
+
+.code-copy-button:hover,
+.code-copy-button:focus-visible {
+  background: rgba(255, 248, 241, 0.16);
+  outline: none;
 }
 
 .content-body table {

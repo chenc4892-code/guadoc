@@ -5,6 +5,7 @@
 - Added server-side Markdown detection and rendering for plain Markdown pasted into the rich editor.
 - Routed the admin live preview through the same server-side renderer so Markdown preview matches published pages.
 - Returned rendered page HTML from the public single-page API endpoint.
+- Increased public article body type size, restyled code blocks with a terminal-inspired surface, and added copy buttons to public code blocks.
 
 ## 2026-05-12
 
